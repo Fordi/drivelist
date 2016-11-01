@@ -1,7 +1,7 @@
 #!/bin/bash
 function get_mountpoints {
   while read mountpoint; do
-    echo "  - '$mountpoint'"
+    echo "- '$mountpoint'"
   done < <(cat /proc/mounts | grep -E "^/dev/$1 " | cut -d \  -f 2)
 }
 function is_removable {
