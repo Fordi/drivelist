@@ -21,7 +21,11 @@ function is_removable {
 while read line; do
   eval "$line"
   echo "device: /dev/$NAME"
-  echo "description: \"$(echo $MODEL | sed -e 's/^\s+|\s+$//g')\""
+  if [[ -n $LABEL ]]; then
+    echo "description: \"$(echo $LABEL | sed -e 's/^\s+|\s+$//g')\""
+  else
+    echo "description: \"$(echo $MODEL | sed -e 's/^\s+|\s+$//g')\""
+  fi
   echo "size: $SIZE"
   echo "mountpoints: "
   get_mountpoints "$NAME"
