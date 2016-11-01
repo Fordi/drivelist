@@ -1,6 +1,8 @@
 #!/bin/bash
-function get_mountpoint {
-	cat /proc/mounts | grep -E "^/dev/$1 " | cut -d \  -f 2 | head -n 1
+function get_mountpoints {
+  while read mountpoint; do
+    echo "  - '$mountpoint'"
+  done < <(cat /proc/mounts | grep -E "^/dev/$1 " | cut -d \  -f 2)
 }
 function is_removable {
   if [[ "$2" == "1" ]]; then
@@ -21,7 +23,8 @@ while read line; do
   echo "device: /dev/$NAME"
   echo "description: \"$(echo $MODEL | sed -e 's/^\s+|\s+$//g')\""
   echo "size: $SIZE"
-  echo "mountpoint: $(get_mountpoint $NAME)"
+  echo "mountpoints: "
+  get_mountpoints "$NAME"
   echo "raw: /dev/$NAME"
   if [[ $RO == 0 ]]; then
     echo "protected: False"
