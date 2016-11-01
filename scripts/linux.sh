@@ -6,16 +6,16 @@ function get_mountpoints {
 }
 function is_removable {
   if [[ "$2" == "1" ]]; then
-    return 1
+    return 0
   fi
   eval "$(udevadm info --query=property --export --export-prefix=UDEV_ --name="$1")"
   if [[ ( \
       "$UDEV_ID_DRIVE_FLASH_SD" == "1" && \
       "$UDEV_ID_DRIVE_MEDIA_FLASH_SD" == "1" \
       ) || "$UDEV_ID_BUS" == "usb" ]];  then
-    return 1
-  else
     return 0
+  else
+    return 1
   fi
 }
 while read line; do
@@ -32,9 +32,9 @@ while read line; do
     echo "protected: True"
   fi
   if is_removable "$NAME" $RM; then
-    echo 'system: True'
-  else
     echo 'system: False'
+  else
+    echo 'system: True'
   fi
   if [[ "$TYPE" == "disk" ]]; then
     echo 'disk: True'
